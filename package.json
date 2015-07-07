@@ -1,0 +1,28 @@
+{
+  "name": "stream-forward",
+  "version": "0.0.0",
+  "description": "Forward stream events.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test --timeout 5000"
+  },
+  "files": [
+    "index.js",
+    "license"
+  ],
+  "keywords": [
+    "stream",
+    "forward",
+    "event"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "stubs": "^2.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "request": "^2.58.0",
+    "through2": "^2.0.0"
+  }
+}
