@@ -1,6 +1,6 @@
 {
   "name": "stream-forward",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Forward stream events.",
   "main": "index.js",
   "scripts": {
