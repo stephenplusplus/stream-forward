@@ -24,7 +24,23 @@ streamForward(request('http://yahoo.com'))
   });
 ```
 
-*Note: don't neglect proper event handling on the individual parts of your stream. This is just a convenience when you have to manually listen and re-emit events across a middleman/spy pipe.*
+**Note: don't neglect proper event handling on the individual parts of your stream.**
+
+This is just a convenience when you have to manually listen and re-emit events across a middleman/spy pipe. Consider the following example:
+
+```js
+var fs = require('fs');
+
+function getRequestStream(reqOpts) {
+  return streamForward(request(reqOpts))
+    .pipe(fs.createWriteStream('./request-cache'));
+}
+
+getRequestStream('http://yahoo.com')
+  .on('complete', function () {
+    // Without `stream-forward`, this couldn't emit.
+  });
+```
 
 ## stream = streamForward(stream, [options]);
 
