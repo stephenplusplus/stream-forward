@@ -62,7 +62,7 @@ streamForward(sourceStream)
   .on('complete', function () {
     // Not called.
   });
-```f
+```
 
 ##### Enabled
 ```js
