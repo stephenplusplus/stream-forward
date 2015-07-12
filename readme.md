@@ -17,7 +17,7 @@ var streamForward = require('stream-forward');
 var streamForward = require('stream-forward');
 var request = require('request');
 
-streamForward(request('http://yahoo.com'), 'response')
+streamForward(request('http://yahoo.com'))
   .pipe(process.stdout)
   .on('response', function (response) {
     // `response` from the request stream.
