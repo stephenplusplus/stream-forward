@@ -18,6 +18,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "array-to-map": "^1.0.2",
+    "on-everything": "^1.0.0",
     "stubs": "^2.0.0"
   },
   "devDependencies": {

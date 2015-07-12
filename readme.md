@@ -24,16 +24,74 @@ streamForward(request('http://yahoo.com'), 'response')
   });
 ```
 
-*Note: don't neglect proper event handling on the individual parts of your stream. This is just a convenience when you have to manually listen and re-emit events across a pipe.*
+*Note: don't neglect proper event handling on the individual parts of your stream. This is just a convenience when you have to manually listen and re-emit events across a middleman/spy pipe.*
 
-## streamForward(stream, eventNames)
+## stream = streamForward(stream, [options]);
+
 
 ### stream
 
-The source stream to spy on.
+Type: `Stream`
 
-### eventNames
+The source stream to spy on. This is returned from the function to allow chaining.
 
-Type: `String`, `Array`
+
+### options
+
+*Optional.* Configuration options.
+
+
+#### options.continuous
+
+Type: `Boolean`
+<br>Default: `false`
+
+If true, when a new stream is attached to `stream`, it will receive the events emitted by the original.
+
+##### Disabled (false)
+```js
+var sourceStream = request('http://yahoo.com');
+var through = require('through2');
+
+streamForward(sourceStream)
+  .pipe(through())
+  .on('complete', function () {
+    // Called.
+  })
+  .pipe(through())
+  .on('complete', function () {
+    // Not called.
+  });
+```f
+
+##### Enabled
+```js
+var sourceStream = request('http://yahoo.com');
+var through = require('through2');
+
+streamForward(sourceStream, { continuous: true })
+  .pipe(through())
+  .on('complete', function () {
+    // Called.
+  })
+  .pipe(through())
+  .on('complete', function () {
+    // Called.
+  });
+```
+
+
+#### options.events
+
+Type: `Array`
+<br>Default: All events will be emitted.
 
 Event names to watch and re-emit on attached streams.
+
+
+#### options.excludeEvents
+
+Type: `Array`
+<br>Default: `[]`
+
+Event names to ignore from `stream`.
