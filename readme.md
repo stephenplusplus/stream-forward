@@ -64,7 +64,7 @@ Type: `Boolean`
 
 If true, when a new stream is attached to `stream`, it will receive the events emitted by the original.
 
-##### Disabled (false)
+##### Disabled (default)
 ```js
 var sourceStream = request('http://yahoo.com');
 var through = require('through2');
