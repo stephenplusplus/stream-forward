@@ -17,7 +17,15 @@ module.exports = function (stream, opts) {
   var eventNamesToEmit = toMap(opts.events || []);
   var catchAll = Object.keys(eventNamesToEmit).length === 0;
 
-  var eventNamesToExclude = toMap(opts.excludeEvents || []);
+  var endEvents = [
+    'abort',
+    'close',
+    'destroy',
+    'end',
+    'finish',
+    'prefinish'
+  ];
+  var eventNamesToExclude = toMap(opts.excludeEvents || endEvents);
 
   watchPipe(stream);
 

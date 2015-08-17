@@ -14,6 +14,23 @@ describe('stream-forward', function () {
     assert.strictEqual(sourceStream, returnedStream);
   });
 
+  it('does not try to finish a piped stream', function () {
+    var streamThatErrors = through();
+
+    streamForward(streamThatErrors)
+      .pipe(through(function(chunk, enc, next) {
+        // let this back up so that if the source stream emits 'finish', and
+        // streamforward tries to re-emit that event on this stream, it will
+        // throw.
+      }));
+
+    streamThatErrors.write('blah');
+
+    assert.doesNotThrow(function() {
+      streamThatErrors.emit('prefinish');
+    });
+  });
+
   it('forwards all events by default', function (done) {
     var eventsEmitted = 0;
 
