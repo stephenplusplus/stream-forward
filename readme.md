@@ -17,7 +17,11 @@ var streamForward = require('stream-forward');
 var streamForward = require('stream-forward');
 var request = require('request');
 
-streamForward(request('http://yahoo.com'))
+var opts = {
+  events: ['response']
+};
+
+streamForward(request('http://yahoo.com'), opts)
   .pipe(process.stdout)
   .on('response', function (response) {
     // `response` from the request stream.
@@ -32,7 +36,11 @@ This is just a convenience when you have to manually listen and re-emit events a
 var fs = require('fs');
 
 function getRequestStream(reqOpts) {
-  return streamForward(request(reqOpts))
+  var opts = {
+    events: ['complete']
+  };
+
+  return streamForward(request(reqOpts), opts)
     .pipe(fs.createWriteStream('./request-cache'));
 }
 
@@ -100,14 +108,5 @@ streamForward(sourceStream, { continuous: true })
 #### options.events
 
 Type: `Array`
-<br>Default: All events will be emitted.
 
-Event names to watch and re-emit on attached streams.
-
-
-#### options.excludeEvents
-
-Type: `Array`
-<br>Default: `[]`
-
-Event names to ignore from `stream`.
+Event names to re-emit on attached streams.

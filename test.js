@@ -14,27 +14,13 @@ describe('stream-forward', function () {
     assert.strictEqual(sourceStream, returnedStream);
   });
 
-  it('does not try to finish a piped stream', function () {
-    var streamThatErrors = through();
-
-    streamForward(streamThatErrors)
-      .pipe(through(function(chunk, enc, next) {
-        // let this back up so that if the source stream emits 'finish', and
-        // streamforward tries to re-emit that event on this stream, it will
-        // throw.
-      }));
-
-    streamThatErrors.write('blah');
-
-    assert.doesNotThrow(function() {
-      streamThatErrors.emit('prefinish');
-    });
-  });
-
-  it('forwards all events by default', function (done) {
+  it('forwards events', function (done) {
     var eventsEmitted = 0;
+    var opts = {
+      events: ['complete', 'response']
+    };
 
-    streamForward(request('http://www.google.com/hello'))
+    streamForward(request('http://www.google.com/hello'), opts)
       .on('error', done)
       .pipe(through())
       .on('response', function () { eventsEmitted++; })
@@ -44,36 +30,12 @@ describe('stream-forward', function () {
       });
   });
 
-  it('forwards specific events', function (done) {
-    var eventsEmitted = 0;
-    var opts = { events: ['complete'] };
-
-    streamForward(request('http://www.google.com/hello'), opts)
-      .on('error', done)
-      .pipe(through())
-      .on('response', function () { eventsEmitted++; })
-      .on('complete', function () {
-        assert.strictEqual(eventsEmitted, 0);
-        done();
-      });
-  });
-
-  it('should ignore events', function (done) {
-    var completeCalled = false;
-    var opts = { excludeEvents: ['complete'] };
-
-    streamForward(request('http://www.google.com/hello'), opts)
-      .on('error', done)
-      .pipe(through())
-      .on('complete', function () { completeCalled = true; })
-      .on('end', function () {
-        assert.strictEqual(completeCalled, false);
-        done();
-      });
-  });
-
   it('forwards one stream down by default', function (done) {
-    streamForward(request('http://www.google.com/hello'))
+    var opts = {
+      events: ['complete', 'response']
+    };
+
+    streamForward(request('http://www.google.com/hello'), opts)
       .on('error', done)
       .pipe(through())
       .on('complete', function () {
@@ -84,7 +46,10 @@ describe('stream-forward', function () {
   });
 
   it('forwards to all streams', function (done) {
-    var opts = { continuous: true };
+    var opts = {
+      continuous: true,
+      events: ['complete']
+    };
     var firstDoneCalled = false;
 
     streamForward(request('http://www.google.com/hello'), opts)
